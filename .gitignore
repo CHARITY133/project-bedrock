@@ -1,0 +1,11 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+.terraform.lock.hcl
+lambda.zip
+*.pem
+kubeconfig
+.env
+retail-store-sample-app/

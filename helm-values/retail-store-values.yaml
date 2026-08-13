@@ -1,0 +1,47 @@
+# helm-values/retail-store-values.yaml
+#
+# Overrides the retail-store-sample-app umbrella chart's default in-cluster
+# databases with managed AWS services. Credentials are NOT set here — they
+# live in pre-created Kubernetes Secrets (catalog-db, orders-db), pulled
+# from AWS Secrets Manager. See README for the exact commands used to create
+# those secrets.
+
+catalog:
+  mysql:
+    create: false   # disable the in-cluster MySQL StatefulSet
+  app:
+    persistence:
+      provider: mysql
+      endpoint: "bedrock-catalog-mysql.cetciuuumc32.us-east-1.rds.amazonaws.com:3306"
+      database: "catalog"
+      secret:
+        create: false        # we created this secret ourselves
+        name: catalog-db     # must match the Secret name in the retail-app namespace
+
+orders:
+  postgresql:
+    create: false   # disable the in-cluster Postgres StatefulSet
+  app:
+    persistence:
+      provider: postgres
+      endpoint: "bedrock-orders-postgres.cetciuuumc32.us-east-1.rds.amazonaws.com:5432"
+      database: "orders"
+      secret:
+        create: false
+        name: orders-db
+    # messaging left at chart defaults — RabbitMQ runs in-cluster, which is
+    # explicitly acceptable per the assignment spec (Section 4.2)
+
+cart:
+  serviceAccount:
+    create: true
+    annotations:
+      eks.amazonaws.com/role-arn: "arn:aws:iam::344531455408:role/bedrock-carts-dynamodb-role"
+  dynamodb:
+    create: false   # disable the in-cluster dynamodb-local container
+  app:
+    persistence:
+      provider: dynamodb
+      dynamodb:
+        tableName: bedrock-carts
+        createTable: false   # table already created via Terraform
