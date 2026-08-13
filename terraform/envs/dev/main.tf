@@ -10,7 +10,7 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
 
   enable_nat_gateway     = true
-  single_nat_gateway     = true   # cost guardrail: one NAT for the whole VPC, not one per AZ
+  single_nat_gateway     = true # cost guardrail: one NAT for the whole VPC, not one per AZ
   one_nat_gateway_per_az = false
 
   enable_dns_hostnames = true
@@ -18,7 +18,7 @@ module "vpc" {
 
   # Tags EKS needs later to auto-discover subnets for load balancers
   public_subnet_tags = {
-    "kubernetes.io/role/elb"                       = "1"
+    "kubernetes.io/role/elb"                        = "1"
     "kubernetes.io/cluster/project-bedrock-cluster" = "shared"
   }
   private_subnet_tags = {
@@ -90,16 +90,6 @@ resource "aws_eks_access_policy_association" "dev_view_namespace" {
     type       = "namespace"
     namespaces = ["retail-app"]
   }
-}
-
-output "dev_view_access_key_id" {
-  value     = aws_iam_access_key.dev_view.id
-  sensitive = true
-}
-
-output "dev_view_secret_access_key" {
-  value     = aws_iam_access_key.dev_view.secret
-  sensitive = true
 }
 resource "aws_security_group" "rds" {
   name        = "bedrock-rds-sg"
@@ -234,7 +224,7 @@ resource "aws_dynamodb_table" "carts" {
 
   tags = { Name = "bedrock-carts" }
 }
-  
+
 
 data "http" "lbc_iam_policy" {
   url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.13.0/docs/install/iam_policy.json"
@@ -432,7 +422,7 @@ resource "aws_s3_bucket_notification" "assets" {
   bucket = aws_s3_bucket.assets.id
   lambda_function {
     lambda_function_arn = aws_lambda_function.asset_processor.arn
-    events               = ["s3:ObjectCreated:*"]
+    events              = ["s3:ObjectCreated:*"]
   }
   depends_on = [aws_lambda_permission.allow_s3]
 }

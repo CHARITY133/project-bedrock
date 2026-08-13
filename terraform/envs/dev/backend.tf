@@ -16,7 +16,7 @@ terraform {
     bucket       = "bedrock-tfstate-charity2025"
     key          = "project-bedrock/terraform.tfstate"
     region       = "us-east-1"
-    use_lockfile = true   # native S3 locking, Terraform 1.11+ — no DynamoDB table needed
+    use_lockfile = true # native S3 locking, Terraform 1.11+ — no DynamoDB table needed
     encrypt      = true
   }
 }
