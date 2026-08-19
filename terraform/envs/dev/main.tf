@@ -36,6 +36,7 @@ module "eks" {
 
   cluster_name    = "project-bedrock-cluster"
   cluster_version = "1.34"
+  bootstrap_self_managed_addons = false
 
   cluster_endpoint_public_access = true
 
